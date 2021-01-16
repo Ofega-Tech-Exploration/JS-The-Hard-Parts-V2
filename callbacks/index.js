@@ -190,15 +190,15 @@ function multiMap(arrVals, arrCallbacks) {
     console.log(objectFilter(cities, city => city.toUpperCase())) // Should log { London: 'LONDON', Paris: 'PARIS'}
 */
 function objectFilter(obj, callback) {
-  const objKeys = Object.keys(obj);
-
-  return reduce(objKeys, (acc, item) => { 
-    if(obj[item] === callback(item)) {
-      acc[item] = obj[item]
+  const res = {};
+  
+  for(const key in obj) {
+    if(obj[key] === callback(key)) {
+      res[key] = obj[key]
     }
-    
-    return acc
-  }, {});
+  }
+  
+  return res;
 }
 
 
@@ -269,102 +269,175 @@ function countBy(array, callback) {
 }
 
 
-// Challenge 15
+/* 
+  Challenge 15: Create a function groupBy that accepts an array and a callback, and returns an object. groupBy will iterate through the array and perform the callback on each element. Each return value from the callback will be saved as a key on the object. The value associated with each key will be an array consisting of all the elements that resulted in that return value when passed into the callback.
+
+  Test Case: 
+    const decimals = [1.3, 2.1, 2.4];
+    const floored = function(num) { 
+      return Math.floor(num); 
+    };
+
+    console.log(groupBy(decimals, floored)) => { 1: [1.3], 2: [2.1, 2.4] }
+*/
 function groupBy(array, callback) {
+  return reduce(array, (acc, item) => { 
+    const key = callback(item);
 
+    if(acc[key] && key === callback(item)) acc[key].push(item);
+    else acc[key] = [item];
+    
+    return acc
+  }, {});
 }
 
-// /*** Uncomment these to check your work! ***/
-// const decimals = [1.3, 2.1, 2.4];
-// const floored = function(num) { return Math.floor(num); };
-// console.log(groupBy(decimals, floored)); // should log: { 1: [1.3], 2: [2.1, 2.4] }
 
+/* 
+  Challenge 16: Create a function goodKeys that accepts an object and a callback. The callback will return either true or false. goodKeys will iterate through the object and perform the callback on each value. goodKeys will then return an array consisting only the keys whose associated values yielded a true return value from the callback.
 
-// Challenge 16
+  Test Case: 
+    const sunny = { 
+      mac: 'priest', 
+      dennis: 'calculating', 
+      charlie: 'birdlaw', 
+      dee: 'bird', 
+      frank: 'warthog' 
+    };
+
+    const startsWithBird = function(str) { 
+      return str.slice(0, 4).toLowerCase() === 'bird'; 
+    };
+
+    console.log(goodKeys(sunny, startsWithBird)) => ['charlie', 'dee']
+*/
 function goodKeys(obj, callback) {
+  const res = [];
 
+  for(const key in obj) {
+    if(callback(obj[key])) {
+      res.push(key);
+    }
+  }
+
+  return res;
 }
 
-// /*** Uncomment these to check your work! ***/
-// const sunny = { mac: 'priest', dennis: 'calculating', charlie: 'birdlaw', dee: 'bird', frank: 'warthog' };
-// const startsWithBird = function(str) { return str.slice(0, 4).toLowerCase() === 'bird'; };
-// console.log(goodKeys(sunny, startsWithBird)); // should log: ['charlie', 'dee']
 
+/* 
+  Challenge 17: Create a function commutative that accepts two callbacks and a value. commutative will return a boolean indicating if the passing the value into the first function, and then passing the resulting output into the second function, yields the same output as the same operation with the order of the functions reversed (passing the value into the second function, and then passing the output into the first function).
 
-// Challenge 17
+  Test Case: 
+    const multBy3 = n => n * 3;
+    const divBy4 = n => n / 4;
+    const subtract5 = n => n - 5;
+
+    console.log(commutative(multBy3, divBy4, 11)) => true
+    console.log(commutative(multBy3, subtract5, 10)) => false
+    console.log(commutative(divBy4, subtract5, 48)) => false
+*/
 function commutative(func1, func2, value) {
+  const firstResult = func2(func1(value));
+  const secondResult = func1(func2(value));
 
+  return firstResult === secondResult;
 }
 
-// /*** Uncomment these to check your work! ***/
-// const multBy3 = n => n * 3;
-// const divBy4 = n => n / 4;
-// const subtract5 = n => n - 5;
-// console.log(commutative(multBy3, divBy4, 11)); // should log: true
-// console.log(commutative(multBy3, subtract5, 10)); // should log: false
-// console.log(commutative(divBy4, subtract5, 48)); // should log: false
 
+/* 
+  Challenge 18: Create a function objFilter that accepts an object and a callback. objFilter should make a new object, and then iterate through the passed-in object, using each key as input for the callback. If the output from the callback is equal to the corresponding value, then that key-value pair is copied into the new object. objFilter will return this new object.
 
-// Challenge 18
+  Test Case: 
+    const startingObj = {};
+
+    startingObj[6] = 3;
+    startingObj[2] = 1;
+    startingObj[12] = 4;
+
+    const half = n => n / 2;
+    console.log(objFilter(startingObj, half)) => should log: { 2: 1, 6: 3 }
+*/
 function objFilter(obj, callback) {
-
+  return objectFilter(obj, callback);
 }
 
-// /*** Uncomment these to check your work! ***/
-// const startingObj = {};
-// startingObj[6] = 3;
-// startingObj[2] = 1;
-// startingObj[12] = 4;
-// const half = n => n / 2;
-// console.log(objFilter(startingObj, half)); // should log: { 2: 1, 6: 3 }
 
+/* 
+  Challenge 19: Create a function rating that accepts an array (of functions) and a value. All the functions in the array will return true or false. rating should return the percentage of functions from the array that return true when the value is used as input.
 
-// Challenge 19
+  Test Case: 
+    const isEven = n => n % 2 === 0;
+    const greaterThanFour = n => n > 4;
+    const isSquare = n => Math.sqrt(n) % 1 === 0;
+    const hasSix = n => n.toString().includes('6');
+
+    const checks = [isEven, greaterThanFour, isSquare, hasSix];
+
+    console.log(rating(checks, 64)); // should log: 100
+    console.log(rating(checks, 66)); // should log: 75
+*/
 function rating(arrOfFuncs, value) {
-
+  const count = reduce(arrOfFuncs, (acc, cb) => {  
+    if(cb(value)) acc++;
+    return acc;
+  }, 0);
+  
+  return (count / arrOfFuncs.length) * 100
 }
 
-// /*** Uncomment these to check your work! ***/
-// const isEven = n => n % 2 === 0;
-// const greaterThanFour = n => n > 4;
-// const isSquare = n => Math.sqrt(n) % 1 === 0;
-// const hasSix = n => n.toString().includes('6');
-// const checks = [isEven, greaterThanFour, isSquare, hasSix];
-// console.log(rating(checks, 64)); // should log: 100
-// console.log(rating(checks, 66)); // should log: 75
 
+/* 
+  Challenge 20: Create a function pipe that accepts an array (of functions) and a value. pipe should input the value into the first function in the array, and then use the output from that function as input for the second function, and then use the output from that function as input for the third function, and so forth, until we have an output from the last function in the array. pipe should return the final output.
 
-// Challenge 20
+  Test Case: 
+    const capitalize = str => str.toUpperCase();
+    const addLowerCase = str => str + str.toLowerCase();
+    const repeat = str => str + str;
+
+    const capAddlowRepeat = [capitalize, addLowerCase, repeat];
+
+    console.log(pipe(capAddlowRepeat, 'cat')) => 'CATcatCATcat'
+*/
 function pipe(arrOfFuncs, value) {
-
+  return reduce(arrOfFuncs, (acc, cb) => cb(acc), value)
 }
 
-// /*** Uncomment these to check your work! ***/
-// const capitalize = str => str.toUpperCase();
-// const addLowerCase = str => str + str.toLowerCase();
-// const repeat = str => str + str;
-// const capAddlowRepeat = [capitalize, addLowerCase, repeat];
-// console.log(pipe(capAddlowRepeat, 'cat')); // should log: 'CATcatCATcat'
 
+/* 
+  Challenge 21: Create a function highestFunc that accepts an object (which will contain functions) and a subject (which is any value). highestFunc should return the key of the object whose associated value (which will be a function) returns the largest number, when the subject is given as input.
 
-// Challenge 21
+  Test Case: 
+    const groupOfFuncs = {};
+
+    groupOfFuncs.double = n => n * 2;
+    groupOfFuncs.addTen = n => n + 10;
+    groupOfFuncs.inverse = n => n * -1;
+
+    console.log(highestFunc(groupOfFuncs, 5)) => 'addTen'
+    console.log(highestFunc(groupOfFuncs, 11)) => 'double'
+    console.log(highestFunc(groupOfFuncs, -20)) => 'inverse'
+*/
 function highestFunc(objOfFuncs, subject) {
+  let [currentMaxKey, currentResult] = ["", 0];
 
+  for (const key in objOfFuncs) {
+    const objValue = objOfFuncs[key](subject);
+
+    if(objValue > currentResult) {
+      [currentMaxKey, currentResult] = [key, objValue];
+    }
+  }
+
+  return currentMaxKey;
 }
 
-// /*** Uncomment these to check your work! ***/
-// const groupOfFuncs = {};
-// groupOfFuncs.double = n => n * 2;
-// groupOfFuncs.addTen = n => n + 10;
-// groupOfFuncs.inverse = n => n * -1;
-// console.log(highestFunc(groupOfFuncs, 5)); // should log: 'addTen'
-// console.log(highestFunc(groupOfFuncs, 11)); // should log: 'double'
-// console.log(highestFunc(groupOfFuncs, -20)); // should log: 'inverse'
 
+/* 
+  Challenge 22: Create a function, combineOperations, that takes two parameters: a starting value and an array of functions. combineOperations should pass the starting value into the first function in the array. combineOperations should pass the value returned by the first function into the second function, and so on until every function in the array has been called. combineOperations should return the final value returned by the last function in the array.
 
-// Challenge 22
+  Test Case: console.log(combineOperations(0, [add100, divByFive, multiplyByThree])) => 60
+*/
 function combineOperations(startVal, arrOfFuncs) {
-
+  return pipe(arrOfFuncs, startVal)
 }
 
 function add100(num) {
@@ -379,14 +452,22 @@ function multiplyByThree(num) {
   return num * 3;
 }
 
-// /*** Uncomment these to check your work! ***/
-// console.log(combineOperations(0, [add100, divByFive, multiplyByThree])); // Should output 60 -->
-// console.log(combineOperations(0, [divByFive, multiplyFive, addTen])); // Should output 10
 
+/* 
+  Challenge 23: Define a function myFunc that takes an array and a callback. myFunc should pass each element from the array (in order) into the callback. If the callback returns true, myFunc should return the index of the current element. If the callback never returns true, myFunc should return -1.
 
-// Challenge 23
+  Test Case: 
+    console.log(myFunc(numbers, isOdd)) => 1
+    console.log(myFunc(evens, isOdd)) => -1
+*/
 function myFunc(array, callback) {
+  return reduce(array, (acc, num) => {  
+    if(callback(num)) {
+      acc = array.indexOf(num)
+    }
 
+    return acc;
+  }, -1);
 }
 
 const numbers = [2, 3, 6, 64, 10, 8, 12];
@@ -396,12 +477,16 @@ function isOdd(num) {
   return (num % 2 !== 0);
 }
 
-// /*** Uncomment these to check your work! ***/
-// console.log(myFunc(numbers, isOdd)); // Output should be 1
-// console.log(myFunc(evens, isOdd)); // Output should be -1
 
+/* 
+  Challenge 24: Write a function myForEach that accepts an array and a callback function. Your function should pass each element of the array (in order) into the callback function. The behavior of this function should mirror the functionality of the native .forEach() JavaScript array method as closely as possible.
 
-// Challenge 24
+  Test Case: 
+    const nums = [1, 2, 3];
+
+    myForEach(nums, addToSum);
+    console.log(sum) => 6
+*/
 function myForEach(array, callback) {
 
 }
@@ -411,8 +496,3 @@ let sum = 0;
 function addToSum(num) {
   sum += num;
 }
-
-// /*** Uncomment these to check your work! ***/
-// const nums = [1, 2, 3];
-// myForEach(nums, addToSum);
-// console.log(sum); // Should output 6

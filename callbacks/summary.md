@@ -1,0 +1,1 @@
+Generalization of a function is essential for reusability. We do not have to predefine values and functionality until when we need to use the function. The higher-order function takes in or returns out a function whilst a callback function is a function we insert into a higher-order function.
