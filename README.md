@@ -8,5 +8,5 @@ Exercises are my solutions to the pair programming challenges prepared for each 
 
 ### Table of Content
   1. Functions & Callbacks:      
-    - [Review]("./callbacks/summary.md")    
-    - [Exercises]("./callbacks/index.js")
+    - [Review]("/callbacks/summary.md")    
+    - [Exercises]("/callbacks/index.js")
