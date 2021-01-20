@@ -1,4 +1,4 @@
-## Callbacks Review
+# Callbacks Review
 Going through the course gives me a newfound appreciation for callbacks. It made me realize how important the concept is in JavaScript, and how not knowing about it can lead to a lack of understanding in some other areas. 
 
 I realized that although I have used callbacks a lot through the years in various implementations and used the name several times whilst explaining my code, I never really recognized everything that came with understanding callbacks. 
