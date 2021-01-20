@@ -9,4 +9,4 @@ On the one hand, it is just that. Taking higher-order functions like map(), redu
 
 However, we use callbacks in another way. We use it to deal with asynchronicity in Javascript. What does this mean? It means that we can use callbacks to define a functionality that needs to execute later, usually after some asynchronous task resolves. Understanding asynchronous callbacks is dependent on understanding how JavaScript runs our code within its host environment. For the web, this host is the Browser.
 
-I like to think about it like this; callbacks provide a bridge between JavaScript's execution environment and the Browser's resolved operations. For more information on how JavaScript runs, this course and [the talk]("https://www.youtube.com/watch?v=8aGhZQkoFbQ&ab_channel=JSConf") by Philip Roberts do justice.
+I like to think about it like this; callbacks provide a bridge between JavaScript's execution environment and the Browser's resolved operations. For more information on how JavaScript runs, this course and [the talk](https://www.youtube.com/watch?v=8aGhZQkoFbQ&ab_channel=JSConf) by Philip Roberts do justice.
